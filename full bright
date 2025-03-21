@@ -1,65 +1,51 @@
-local function extremeGraphicsReduction()
+local function applyFullBright()
     local lighting = game:GetService("Lighting")
     local terrain = workspace:FindFirstChildOfClass("Terrain")
 
-    -- Bảo vệ script với pcall để tránh crash
+    -- Bảo vệ script với pcall để tránh lỗi
     pcall(function()
-        -- Tối ưu hóa Lighting đến mức tối thiểu
+        -- Tối ưu hóa Lighting để làm sáng
         lighting.GlobalShadows = false -- Tắt bóng toàn cục
         lighting.ShadowSoftness = 0
-        lighting.Technology = Enum.Technology.Compatibility -- Chế độ đồ họa cơ bản
-        lighting.Brightness = 0.5 -- Độ sáng tối thiểu
-        lighting.FogEnd = 25 -- Giảm tầm nhìn sương mù cực thấp
+        lighting.Brightness = 2 -- Tăng độ sáng tối đa (Roblox cho phép lên đến 2)
+        lighting.Ambient = Color3.fromRGB(255, 255, 255) -- Ánh sáng môi trường trắng sáng
+        lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255) -- Ánh sáng ngoài trời sáng
+        lighting.FogEnd = 1000 -- Tăng tầm nhìn, giảm sương mù
         lighting.FogStart = 0
-        lighting.Ambient = Color3.new(0, 0, 0) -- Tắt ánh sáng môi trường
-        lighting.OutdoorAmbient = Color3.new(0, 0, 0) -- Tắt ánh sáng ngoài trời
+        lighting.ClockTime = 12 -- Giữ ban ngày để tối đa ánh sáng
 
-        -- Tắt toàn bộ hiệu ứng PostEffect
+        -- Tắt hiệu ứng tối hoặc mờ
         for _, effect in pairs(lighting:GetChildren()) do
             if effect:IsA("PostEffect") then
-                effect.Enabled = false
+                effect.Enabled = false -- Tắt hiệu ứng như Bloom hoặc Blur
             end
         end
 
-        -- Tối ưu hóa Terrain
+        -- Tối ưu hóa Terrain (nếu có)
         if terrain then
-            terrain.WaterWaveSize = 0 -- Tắt sóng nước
-            terrain.WaterWaveSpeed = 0 -- Tắt chuyển động nước
-            terrain.WaterReflectance = 0 -- Tắt phản chiếu nước
-            terrain.WaterTransparency = 1 -- Làm nước hoàn toàn trong suốt
+            terrain.WaterReflectance = 0.2 -- Giữ phản chiếu nước nhẹ để không tối
+            terrain.WaterTransparency = 0 -- Nước trong suốt nhưng vẫn thấy
         end
 
-        -- Tối ưu hóa các đối tượng trong Workspace
+        -- Đảm bảo các đối tượng không bị tối
         for _, obj in pairs(workspace:GetDescendants()) do
             if obj:IsA("BasePart") then
-                obj.CastShadow = false -- Tắt bóng từng đối tượng
-                obj.Material = Enum.Material.Plastic -- Vật liệu nhẹ nhất
-                obj.Reflectance = 0 -- Tắt phản chiếu
-                obj.Transparency = 0.8 -- Làm mờ các đối tượng để giảm tải (giữ 0.2 để tránh lỗi)
-            elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") or obj:IsA("Smoke") then
-                obj.Enabled = false -- Tắt toàn bộ hiệu ứng hạt và chuyển động
+                obj.CastShadow = false -- Tắt bóng của từng đối tượng
+                obj.Reflectance = 0.1 -- Giữ phản chiếu nhẹ
             end
         end
 
-        -- Giảm chất lượng render xuống mức thấp nhất
-        settings().Rendering.QualityLevel = Enum.QualityLevel.Level01 -- Chất lượng cực thấp
-        settings().Rendering.EnableFRM = false -- Tắt Full Resolution Mode
-        settings().Rendering.EnableFullShadowMap = false -- Tắt bản đồ bóng chi tiết
-
-        -- Tắt hiệu ứng môi trường khác
-        workspace.Gravity = 0 -- Giảm tải tính toán vật lý (có thể ảnh hưởng nhỏ đến gameplay)
+        print("[Grok 3 - xAI] Full Bright applied! Screen is now fully lit!")
     end)
-
-    print("[Grok 3 - xAI] Extreme graphics reduction applied! Game optimized for long-term AFK.")
 end
 
 -- Chạy script và xử lý lỗi
 local success, error = pcall(function()
-    extremeGraphicsReduction()
+    applyFullBright()
 end)
 
 if not success then
-    warn("[Grok 3 - xAI] Error during optimization: " .. error)
+    warn("[Grok 3 - xAI] Error applying Full Bright: " .. error)
 else
-    print("[Grok 3 - xAI] Optimization complete. Ready to AFK with minimal resource usage.")
+    print("[Grok 3 - xAI] Full Bright successfully activated!")
 end
