@@ -1,0 +1,55 @@
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Name = "BlackScreenGUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true -- Bỏ qua các vùng không thể phủ của GUI mặc định
+
+-- Tạo khung đen full màn hình
+local BlackFrame = Instance.new("Frame")
+BlackFrame.Parent = ScreenGui
+BlackFrame.BackgroundColor3 = Color3.new(0, 0, 0) -- Màu đen
+BlackFrame.Size = UDim2.new(1, 0, 1, 50) -- Tăng chiều cao thêm 50px để bao quát phần dưới
+BlackFrame.Position = UDim2.new(0, 0, 0, -36) -- Điều chỉnh lên trên để phủ thanh công cụ
+BlackFrame.Visible = false -- Mặc định tắt
+BlackFrame.BorderSizePixel = 0
+BlackFrame.BackgroundTransparency = 0 -- Đảm bảo không trong suốt
+
+-- Đảm bảo khung luôn nằm trên cùng
+BlackFrame.ZIndex = 999 -- Ưu tiên hiển thị cao nhất
+
+-- Tạo Menu bật/tắt
+local MenuFrame = Instance.new("Frame")
+MenuFrame.Parent = ScreenGui
+MenuFrame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2) -- Nền xám tối cho menu (để nổi bật trên nền đen)
+MenuFrame.Size = UDim2.new(0, 100, 0, 30) -- Kích thước menu
+MenuFrame.Position = UDim2.new(0, 10, 0, 10) -- Góc trái trên, cách mép 10px
+MenuFrame.BorderSizePixel = 0
+
+-- Tạo nút bật/tắt
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Parent = MenuFrame
+ToggleButton.Size = UDim2.new(1, 0, 1, 0)
+ToggleButton.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4) -- Xám nhạt cho nút
+ToggleButton.Text = "Toggle Black Screen"
+ToggleButton.TextColor3 = Color3.new(1, 1, 1) -- Chữ trắng
+ToggleButton.Font = Enum.Font.SourceSans
+ToggleButton.TextSize = 16
+ToggleButton.BorderSizePixel = 0
+
+-- Biến trạng thái
+local isBlackScreenOn = false
+
+-- Hàm xử lý bật/tắt màn hình đen
+ToggleButton.MouseButton1Click:Connect(function()
+    isBlackScreenOn = not isBlackScreenOn
+    BlackFrame.Visible = isBlackScreenOn
+    if isBlackScreenOn then
+        ToggleButton.Text = "Black Screen: ON"
+    else
+        ToggleButton.Text = "Black Screen: OFF"
+    end
+end)
+
+-- Thông báo script đã chạy
+print("Black Screen Script đã được tải thành công! Sử dụng menu ở góc trái trên để bật/tắt.")
+
