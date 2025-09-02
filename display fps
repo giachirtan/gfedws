@@ -1,0 +1,49 @@
+local function createFPSDisplay()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    screenGui.Name = "FPSDisplay"
+    screenGui.ResetOnSpawn = false
+
+    local fpsFrame = Instance.new("Frame")
+    fpsFrame.Size = UDim2.new(0, 100, 0, 30)
+    fpsFrame.Position = UDim2.new(0, 10, 0, 10) -- Góc trên trái, padding 10px
+    fpsFrame.BackgroundTransparency = 0.7
+    fpsFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    fpsFrame.BorderSizePixel = 0
+    fpsFrame.Parent = screenGui
+
+    local fpsText = Instance.new("TextLabel")
+    fpsText.Size = UDim2.new(1, 0, 1, 0)
+    fpsText.BackgroundTransparency = 1
+    fpsText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    fpsText.Font = Enum.Font.SourceSansBold
+    fpsText.TextSize = 16
+    fpsText.Text = "FPS: Calculating..."
+    fpsText.Parent = fpsFrame
+
+    local lastTime = tick()
+    local frameCount = 0
+
+    game:GetService("RunService").RenderStepped:Connect(function()
+        frameCount = frameCount + 1
+        local currentTime = tick()
+        if currentTime - lastTime >= 1 then -- Cập nhật mỗi giây
+            local fps = math.floor(frameCount / (currentTime - lastTime)) -- Tính chính xác FPS
+            fpsText.Text = "FPS: " .. fps
+            frameCount = 0
+            lastTime = currentTime
+        end
+    end)
+
+    print("[Grok 3 - xAI] FPS display activated in top-left corner!")
+end
+
+local success, error = pcall(function()
+    createFPSDisplay()
+end)
+
+if not success then
+    warn("[Grok 3 - xAI] Error creating FPS display: " .. error)
+else
+    print("[Grok 3 - xAI] FPS display running successfully!")
+end
